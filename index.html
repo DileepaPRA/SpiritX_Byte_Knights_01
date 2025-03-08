@@ -1,41 +1,36 @@
+<!-- SecureConnect Signup Page -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpiritX Byte Knights</title>
-    <link rel="stylesheet" href="style.css">
+    <title>SecureConnect - Signup</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <header>
-        <h1>Welcome to SpiritX Byte Knights</h1>
-    </header>
-    <main>
-        <section>
-            <h2>About Us</h2>
-            <p>We are a team of passionate developers and tech enthusiasts.</p>
-        </section>
-        <section>
-            <h2>Our Mission</h2>
-            <p>To innovate and create cutting-edge technology solutions.</p>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2023 SpiritX Byte Knights. All rights reserved.</p>
-    </footer>
+    <div class="container">
+        <h2>Signup</h2>
+        <form id="signupForm" action="signup.php" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <small class="error" id="usernameError"></small>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <small class="error" id="passwordError"></small>
+            <div id="passwordStrength"></div>
+
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+            <small class="error" id="confirmPasswordError"></small>
+
+            <button type="submit">Signup</button>
+        </form>
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
 </body>
 </html>
 
-<!--byte knight gamma hutto-->
-<section>
-    <h2>Contact Us</h2>
-    <form action="/submit" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
-        <button type="submit">Submit</button>
-    </form>
-</section>
+
+
