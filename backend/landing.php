@@ -1,10 +1,8 @@
 <?php
-// landing.php
-
 session_start();
 
 if (!isset($_SESSION['username'])) {
-    header('Location: login.html');
+    header('Location: ../frontend/login.html');
     exit;
 }
 
@@ -17,7 +15,7 @@ $username = $_SESSION['username'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../frontend/styles.css">
 </head>
 <body>
     <div class="container">
@@ -25,6 +23,6 @@ $username = $_SESSION['username'];
         <p id="welcomeMessage">Hello, <?php echo htmlspecialchars($username); ?>!</p>
         <button onclick="logout()">Logout</button>
     </div>
-    <script src="script.js"></script>
+    <script src="../frontend/script.js"></script>
 </body>
 </html>

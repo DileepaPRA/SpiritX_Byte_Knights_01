@@ -26,4 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'message' => 'Incorrect password.']);
     }
 }
+
+// Logout functionality
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['logout'])) {
+    session_start();
+    session_destroy();
+    header('Location: ../frontend/login.html');
+    exit;
+}
 ?>
