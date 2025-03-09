@@ -1,12 +1,11 @@
 <?php
 session_start();
 
+// Redirect to login if not logged in
 if (!isset($_SESSION['username'])) {
-    header('Location: ../frontend/login.html');
+    header('Location: /SpiritX_Byte_Knights_01/frontend/login.html');
     exit;
 }
-
-$username = $_SESSION['username'];
 ?>
 
 <!DOCTYPE html>
@@ -15,14 +14,17 @@ $username = $_SESSION['username'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
-    <link rel="stylesheet" href="../frontend/styles.css">
+    <link rel="stylesheet" href="/SpiritX_Byte_Knights_01/frontend/styles.css">
 </head>
 <body>
     <div class="container">
-        <h2>Welcome</h2>
-        <p id="welcomeMessage">Hello, <?php echo htmlspecialchars($username); ?>!</p>
+        <h2>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h2>
         <button onclick="logout()">Logout</button>
     </div>
-    <script src="../frontend/script.js"></script>
+    <script>
+        function logout() {
+            window.location.href = '/SpiritX_Byte_Knights_01/backend/logout.php';
+        }
+    </script>
 </body>
 </html>

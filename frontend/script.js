@@ -1,12 +1,16 @@
 // DOM Elements
 const signupForm = document.getElementById('signupForm');
+const loginForm = document.getElementById('loginForm');
 const usernameInput = document.getElementById('username');
+const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const confirmPasswordInput = document.getElementById('confirmPassword');
 const usernameError = document.getElementById('usernameError');
+const emailError = document.getElementById('emailError');
 const passwordError = document.getElementById('passwordError');
 const confirmPasswordError = document.getElementById('confirmPasswordError');
-const passwordStrengthDiv = document.getElementById('passwordStrength');
+const formError = document.getElementById('formError');
+const strengthBar = document.getElementById('strengthBar');
 
 // Real-time Username Validation
 usernameInput.addEventListener('input', function () {
@@ -16,6 +20,18 @@ usernameInput.addEventListener('input', function () {
     } else {
         usernameError.textContent = '';
         usernameError.style.display = 'none';
+    }
+});
+
+// Real-time Email Validation
+emailInput.addEventListener('input', function () {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.value)) {
+        emailError.textContent = 'Please enter a valid email address.';
+        emailError.style.display = 'block';
+    } else {
+        emailError.textContent = '';
+        emailError.style.display = 'none';
     }
 });
 
@@ -32,18 +48,6 @@ passwordInput.addEventListener('input', function () {
     updatePasswordStrength(this.value);
 });
 
-// Real-time Confirm Password Validation
-confirmPasswordInput.addEventListener('input', function () {
-    const password = passwordInput.value;
-    if (this.value !== password) {
-        confirmPasswordError.textContent = 'Passwords do not match.';
-        confirmPasswordError.style.display = 'block';
-    } else {
-        confirmPasswordError.textContent = '';
-        confirmPasswordError.style.display = 'none';
-    }
-});
-
 // Update Password Strength Indicator
 function updatePasswordStrength(password) {
     let strength = 0;
@@ -54,17 +58,49 @@ function updatePasswordStrength(password) {
 
     const strengthLevel = ['Weak', 'Medium', 'Strong'][strength - 1] || 'Weak';
     const strengthColor = ['#dc3545', '#ffc107', '#28a745'][strength - 1] || '#dc3545';
-    passwordStrengthDiv.innerHTML = `<div style="width: ${(strength / 4) * 100}%; background-color: ${strengthColor}; height: 100%;"></div>`;
+    strengthBar.style.width = `${(strength / 4) * 100}%`;
+    strengthBar.style.backgroundColor = strengthColor;
 }
 
 // Signup Form Submission
-signupForm.addEventListener('submit', function (e) {
-    const username = usernameInput.value;
-    const password = passwordInput.value;
-    const confirmPassword = confirmPasswordInput.value;
+signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const response = await fetch('../backend/signup.php', {
+        method: 'POST',
+        body: formData
+    });
+    const data = await response.json();
+    if (data.success) {
+        formError.textContent = '';
+        alert(data.message);
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 2000);
+    } else {
+        formError.textContent = data.message;
+        formError.style.display = 'block';
+    }
+});
 
-    if (!username || !password || !confirmPassword) {
-        e.preventDefault();
-        alert('Please fill in all fields.');
+/// Login Form Submission
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const response = await fetch('/SpiritX_Byte_Knights_01/backend/login.php', {
+        method: 'POST',
+        body: formData
+    });
+    const data = await response.json();
+    if (data.success) {
+        formError.textContent = '';
+        alert(data.message);
+        // Redirect to landing page after a short delay
+        setTimeout(() => {
+            window.location.href = '/SpiritX_Byte_Knights_01/backend/landing.php';
+        }, 1000); // 1-second delay
+    } else {
+        formError.textContent = data.message;
+        formError.style.display = 'block';
     }
 });

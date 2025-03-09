@@ -12,13 +12,19 @@
     <div class="container">
         <div class="form-container login">
             <h2>Login</h2>
-            <form id="loginForm" action="/backend/login.php" method="POST">
+            <form id="loginForm" action="/SpiritX_Byte_Knights_01/backend/login.php" method="POST">
                 <input type="email" id="loginEmail" name="email" placeholder="Email" required>
+                <small class="error" id="emailError"></small>
+            
                 <input type="password" id="loginPassword" name="password" placeholder="Password" required>
+                <small class="error" id="passwordError"></small>
+            
+                <div id="formError" class="error"></div>
                 <button type="submit">Login</button>
             </form>
             <p>Don't have an account? <a href="index.html" class="toggle-link">Sign up here</a></p>
         </div>
     </div>
+    <script src="script.js" defer></script>
 </body>
 </html>

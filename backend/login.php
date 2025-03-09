@@ -1,37 +1,30 @@
 <?php
-// login.php
-
 require 'db.php';
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
+    $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Check if username exists
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
-    $stmt->execute(['username' => $username]);
+    // Check if user exists
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
-        echo json_encode(['success' => false, 'message' => 'Username does not exist.']);
-        exit;
+        die("Email does not exist.");
     }
 
     // Verify password
-    if (password_verify($password, $user['password'])) {
-        session_start();
-        $_SESSION['username'] = $username;
-        echo json_encode(['success' => true, 'message' => 'Login successful!']);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Incorrect password.']);
+    if (!password_verify($password, $user['password'])) {
+        die("Incorrect password.");
     }
-}
 
-// Logout functionality
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['logout'])) {
-    session_start();
-    session_destroy();
-    header('Location: ../frontend/login.html');
+    // Store user in session
+    $_SESSION['username'] = $user['username'];
+
+    // Redirect to landing page
+    header("Location: /SpiritX_Byte_Knights_01/backend/landing.php");
     exit;
 }
 ?>

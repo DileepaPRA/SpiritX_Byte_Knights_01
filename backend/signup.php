@@ -1,39 +1,46 @@
 <?php
-// signup.php
-
 require 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $confirmPassword = trim($_POST['confirmPassword']);
 
-    // Validate username length
+    // Validate input
+    if (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
+        echo json_encode(['success' => false, 'message' => 'All fields are required.']);
+        exit;
+    }
+
+    if ($password !== $confirmPassword) {
+        echo json_encode(['success' => false, 'message' => 'Passwords do not match.']);
+        exit;
+    }
+
     if (strlen($username) < 8) {
-        echo json_encode(['success' => false, 'message' => 'Username must be at least 8 characters long.']);
+        echo json_encode(['success' => false, 'message' => 'Username must be at least 8 characters.']);
         exit;
     }
 
-    // Validate password complexity
-    if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/', $password)) {
-        echo json_encode(['success' => false, 'message' => 'Password must contain at least one lowercase letter, one uppercase letter, and one special character.']);
-        exit;
-    }
-
-    // Check if username already exists
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
-    $stmt->execute(['username' => $username]);
+    // Check if username or email already exists
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username OR email = :email");
+    $stmt->execute(['username' => $username, 'email' => $email]);
     if ($stmt->rowCount() > 0) {
-        echo json_encode(['success' => false, 'message' => 'Username already exists.']);
+        echo json_encode(['success' => false, 'message' => 'Username or email already exists.']);
         exit;
     }
 
-    // Hash the password
+    // Hash password
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-    // Insert new user into the database
-    $stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
-    $stmt->execute(['username' => $username, 'password' => $hashedPassword]);
+    // Insert user
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
+    $stmt->execute(['username' => $username, 'email' => $email, 'password' => $hashedPassword]);
 
-    echo json_encode(['success' => true, 'message' => 'Signup successful!']);
+    echo json_encode(['success' => true, 'message' => 'Signup successful! Redirecting...']);
+    // Redirect to login page after 2 seconds
+    header('Refresh: 2; URL=/SpiritX_Byte_Knights_01/frontend/login.html');
+    exit;
 }
 ?>
